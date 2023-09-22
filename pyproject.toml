@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "marketplace-api-template"
+version = "0.1.0"
+description = "This is a simple API application template for marketplace. More information you can find in README file."
+authors = ["Alexandr Abramov <https://github.com/Abramov0Alexandr>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+django = "^4.2.5"
+djangorestframework = "^3.14.0"
+
+
+[tool.poetry.group.dev.dependencies]
+python-dotenv = "^1.0.0"
+psycopg2-binary = "^2.9.7"
+djangorestframework-simplejwt = "^5.2.2"
+drf-yasg = "^1.21.7"
+coverage = "^7.3.1"
+flake8 = "^6.1.0"
+django-extensions = "^3.2.3"
+ipython = "^8.15.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
