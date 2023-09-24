@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
     'django_extensions',
+    'django_filters',
 
     'custom_user.apps.CustomUserConfig',
 ]
@@ -56,6 +58,10 @@ INSTALLED_APPS = [
 # Setting the permission policy
 # https://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy
 
+# Integration with Django Rest Framework is provided through a DRF-specific FilterSet and a filter backend.
+# These may be found in the rest_framework sub-package.
+# https://django-filter.readthedocs.io/en/stable/guide/rest_framework.html
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -65,7 +71,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         # 'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
+
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
 }
 
 # Some of Simple JWT’s behavior can be customized through settings variables in settings.py
