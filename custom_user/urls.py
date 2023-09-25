@@ -1,12 +1,12 @@
 from django.urls import path
 from .apps import CustomUserConfig
-from .views import CustomUserListView, CustomUserCreateView
+from .views import CustomersListView, CustomerCreateView
 
 
 app_name = CustomUserConfig.name
 
 
 urlpatterns = [
-    path('', CustomUserListView.as_view(), name='custom_user_list'),
-    path('create/', CustomUserCreateView.as_view(), name='custom_user_create')
+    path('', CustomersListView.as_view(), name='custom_user_list'),
+    path('create/', CustomerCreateView.as_view(), name='custom_user_create')
     ]
