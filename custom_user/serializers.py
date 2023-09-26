@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from custom_user.models import CustomUser
+from custom_user.validators import PasswordValidation
 
 
 class CustomersListSerializer(serializers.ModelSerializer):
@@ -28,6 +29,7 @@ class VisitorSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('first_name', 'last_name', 'patronymic', 'email', 'password', 'password_confirmation', )
+        validators = [PasswordValidation()]
 
     def create(self, validated_data):
         """
@@ -38,13 +40,6 @@ class VisitorSerializer(serializers.ModelSerializer):
         """
 
         password_confirmation = validated_data.pop('password_confirmation', None)
-
-        if password_confirmation is None:
-            raise serializers.ValidationError("Поле 'password_confirmation' обязательно")
-
-        if validated_data.get('password') != password_confirmation:
-            raise serializers.ValidationError("Пароль и его подтверждение не совпадают")
-
         new_common_user = CustomUser.objects.create_user(**validated_data)
         return new_common_user
 
@@ -60,11 +55,14 @@ class SellerSerializer(serializers.ModelSerializer):
 
     shop_name = serializers.CharField()
     product_images = serializers.ImageField(required=False)
+    password_confirmation = serializers.CharField(write_only=True)
 
     class Meta:
         model = CustomUser
-        fields = ('shop_name', 'product_images', 'email', )
+        fields = ('shop_name', 'product_images', 'email', 'password', 'password_confirmation', )
+        validators = [PasswordValidation()]
 
     def create(self, validated_data):
+        password_confirmation = validated_data.pop('password_confirmation', None)
         new_seller = CustomUser.objects.create_user(**validated_data)
         return new_seller
