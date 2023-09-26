@@ -13,7 +13,7 @@ class CustomersListView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ('is_seller', )
-    permission_classes = IsAdminUser
+    permission_classes = [IsAdminUser]
 
 
 class CustomerCreateView(generics.CreateAPIView):
@@ -39,9 +39,15 @@ class CustomerCreateView(generics.CreateAPIView):
             if is_seller:
                 # Если выбран статус продавца, устанавливаем его
                 serializer.save(is_seller=CustomUser.UserStatus.SELLER)
+                return Response(
+                    {'message': 'Вы зарегистрированы в качестве продавца и можете размещать товары на площадке',
+                     'shop_title': f'{serializer.data.get("shop_name")}',
+                     'status': status.HTTP_201_CREATED})
 
             else:
                 # Если выбран статус посетителя, оставляем его по умолчанию
                 serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response({'message': 'Регистрация успешно завершена!',
+                                 'status': status.HTTP_201_CREATED})
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

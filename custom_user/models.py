@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-from custom_user.services import product_image_upload_path
+from custom_user.services import shop_preview_upload_path
 from custom_user.user_manager import CustomUserManager
 
 
@@ -32,7 +31,7 @@ class CustomUser(AbstractUser):
 
     # Поля, используемые для регистрации продавца
     shop_name = models.CharField(max_length=200, verbose_name='Название магазина', **NULLABLE)
-    product_images = models.ImageField(upload_to=product_image_upload_path, verbose_name='Фото товара', **NULLABLE)
+    shop_preview = models.ImageField(upload_to=shop_preview_upload_path, verbose_name='Превью магазина', **NULLABLE)
 
     # Общие поля для каждого вида пользователя
     email = models.EmailField(unique=True, verbose_name='Email')
