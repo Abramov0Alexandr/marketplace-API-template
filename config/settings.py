@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_filters',
 
     'custom_user.apps.CustomUserConfig',
+    'products.apps.ProductsConfig',
 ]
 
 
@@ -69,8 +70,8 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.AllowAny',
     ],
 
     'DEFAULT_FILTER_BACKENDS': (
