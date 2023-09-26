@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from custom_user.models import CustomUser
 from custom_user.serializers import CustomersListSerializer, VisitorSerializer, SellerSerializer
@@ -18,6 +18,8 @@ class CustomersListView(generics.ListAPIView):
 
 class CustomerCreateView(generics.CreateAPIView):
     """Контроллер для регистрации новых пользователей."""
+
+    permission_classes = [AllowAny]
 
     def get_serializer_class(self):
         """
