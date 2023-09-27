@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from decimal import Decimal
 
 
 class Product(models.Model):
@@ -22,6 +23,20 @@ class Product(models.Model):
     @property
     def shop_name(self):
         return self.seller.shop_name
+
+    def calculate_final_price(self):
+        """
+        Расчет финальной стоимости товара
+        """
+
+        base_price = self.price
+        tax = base_price * Decimal('0.06')  #: Налог
+        bank_fee = base_price * Decimal('0.02')  #: Комиссия банку
+        author_commission = base_price * Decimal('0.02')  #: Комиссия за транзакцию продавца
+        marketplace_fee = base_price * Decimal('0.20')  #: Выручка маркетплейса
+
+        final_price = base_price + tax + bank_fee + author_commission + marketplace_fee
+        return final_price
 
     def __str__(self):
         return f'{self.product_title} {self.shop_name} {self.seller}'
