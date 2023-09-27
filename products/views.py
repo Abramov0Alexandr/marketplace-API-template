@@ -1,7 +1,8 @@
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
 from products.models import Product
 from products.permissions import IsSeller, IsSuperUser, IsShopOwner
-from products.serializers import ProductSerializer
+from products.serializers import ProductSerializer, ProductSaleStatusSerializers
 
 
 class ProductCreateView(generics.CreateAPIView):
@@ -35,6 +36,48 @@ class ProductListView(generics.ListCreateAPIView):
             return Product.objects.all()
 
         return Product.objects.filter(seller=self.request.user)
+
+
+class ChangeProductSaleStatus(generics.UpdateAPIView):
+    """
+    Контроллер, отвечающий за снятие товара с продажи.
+    """
+
+    queryset = Product.objects.all()
+    serializer_class = ProductSaleStatusSerializers
+    permission_classes = [IsShopOwner | IsSuperUser]
+
+    def get_object(self):
+        product = super().get_object()
+
+        if product.is_active_sale:
+            product.is_active_sale = False
+
+        else:
+            product.is_active_sale = True
+
+        product.save()
+        return product
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if instance.is_active_sale:
+            sale_status_message = 'выведен в продажу'
+        else:
+            sale_status_message = 'снят с продажи'
+
+        response_message = {
+            "Product info": {'sale status': f'{instance.is_active_sale}',
+                             'message': f'{instance.product_title} {sale_status_message}',
+                             'status': status.HTTP_200_OK
+                             }
+        }
+
+        return Response(response_message)
 
 
 class ProductDetailView(generics.RetrieveAPIView):
