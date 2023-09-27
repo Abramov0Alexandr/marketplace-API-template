@@ -15,3 +15,12 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
+
+
+class ProductSaleStatusSerializers(serializers.ModelSerializer):
+    """
+    Сериализатор используется в контроллере ChangeProductSaleStatus.
+    """
+    class Meta:
+        model = Product
+        fields = ('is_active_sale', )
