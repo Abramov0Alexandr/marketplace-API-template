@@ -18,6 +18,9 @@ class ProductCreateView(generics.CreateAPIView):
 
         new_product = serializer.save(seller=self.request.user)
         new_product.seller = self.request.user
+
+        total_price = new_product.calculate_final_price()
+        new_product.price = total_price
         new_product.save()
 
 
