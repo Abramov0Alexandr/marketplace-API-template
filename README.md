@@ -76,11 +76,13 @@
      - password: Пароль для входа.
      - password_confirmation: Подтверждение пароля.
      - is_seller: Оставьте поле пустым или укажите false, чтобы зарегистрироваться как обычный пользователь.
+     - phone (необязательно): Номер телефона пользователя.
 
 
   2. Регистрация в качестве продавца:
      - email: Ваша почта. 
      - shop_name: Название магазина. 
+     - shop_preview (необязательно): Лого или превью магазина.
      - password: Пароль для входа.
      - password_confirmation: Подтверждение пароля.
      - is_seller: Укажите true, чтобы зарегистрироваться как продавец.
@@ -103,7 +105,7 @@
      - Снятие или вывод товара в продажу (доступно только продавцам).
 
 
-## Схемы моделей и их взаимосвязей
+## Схемы моделей и их взаимосвязи
 Полная схема моделей
 
 ![Полная схема моделей](models_schemes/full_scheme.png)
@@ -133,6 +135,6 @@ Marketplace API распространяется по [MIT License](https://open
 
 Автор: [Alexandr Abramov <https://github.com/Abramov0Alexandr>]
 
-Связь: [alexandr.abramovv@gmail.com]https://github.com/Abramov0Alexandr)
+Связь: [alexandr.abramovv@gmail.com <https://github.com/Abramov0Alexandr>]
 
 GitHub: [https://github.com/Abramov0Alexandr]
