@@ -24,21 +24,24 @@ class ProductCreateView(generics.CreateAPIView):
         new_product.save()
 
 
-class ProductListView(generics.ListCreateAPIView):
+class ProductListView(generics.ListAPIView):
     """
     Контроллер для просмотра размещенных на площадке товарах.
-    Доступ к контроллеру имеется только у суперпользователя и пользователей со статусом "Продавец".
-    Каждый продавец видит список только своих товаров, суперпользователь видит все размещенные товары.
+    Суперпользователь видит все размещенные на маркетплейсы товары, даже те, которые сняты с продажи.
+    Продавец видит список всех своих товаров.
+    Обычный пользователь может видеть все товары, которые находятся в активной продаже.
     """
 
     serializer_class = ProductSerializer
-    permission_classes = [IsSeller | IsSuperUser]
 
     def get_queryset(self):
         if self.request.user.is_superuser:
             return Product.objects.all()
 
-        return Product.objects.filter(seller=self.request.user)
+        if self.request.user.is_seller:
+            return Product.objects.filter(seller=self.request.user)
+
+        return Product.objects.filter(is_active_sale=True)
 
 
 class ChangeProductSaleStatus(generics.UpdateAPIView):
@@ -83,16 +86,36 @@ class ChangeProductSaleStatus(generics.UpdateAPIView):
         return Response(response_message)
 
 
+class ProductUpdateView(generics.UpdateAPIView):
+    """
+    Контроллер для редактирования информации о товаре.
+    В отличие от ChangeProductSaleStatus, данный контроллер позволяет менять не только статус продажи,
+    но и любую иную информацию. Доступ к контроллеру имеет владелец магазина или суперпользователь.
+    """
+
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+    permission_classes = [IsShopOwner | IsSuperUser]
+
+
 class ProductDetailView(generics.RetrieveAPIView):
     """
     Контроллер для просмотра детальной информации о товаре.
-    Информацию о товаре может просмотреть только тот продавец, который разместил данный товар.
-    Суперпользователь может просматривать детальную информацию всех размещенных товаров.
+    Суперпользователь может просматривать все размещенные на маркетплейсы товары, даже те, которые сняты с продажи.
+    Продавец может просматривать информацию только о своих товарах.
+    Обычный пользователь может просматривать информацию только о тех товарах, которые находятся в активной продаже.
     """
 
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsShopOwner | IsSuperUser]
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Product.objects.all()
+
+        if self.request.user.is_seller:
+            return Product.objects.filter(seller=self.request.user)
+
+        return Product.objects.filter(is_active_sale=True)
 
 
 class ProductDeleteView(generics.DestroyAPIView):
