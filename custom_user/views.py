@@ -3,13 +3,13 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from custom_user.models import CustomUser
-from custom_user.serializers import CustomersListSerializer, VisitorSerializer, SellerSerializer
+from custom_user import serializers
 
 
 class CustomersListView(generics.ListAPIView):
     """Контроллер для отображения списка зарегистрированных пользователей."""
 
-    serializer_class = CustomersListSerializer
+    serializer_class = serializers.CustomersListSerializer
     queryset = CustomUser.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ('is_seller', )
@@ -29,9 +29,9 @@ class CustomerCreateView(generics.CreateAPIView):
         is_seller = self.request.data.get('is_seller', None)
 
         if is_seller:
-            return SellerSerializer
+            return serializers.SellerSerializer
 
-        return VisitorSerializer
+        return serializers.VisitorSerializer
 
     def create(self, request, *args, **kwargs):
         is_seller = request.data.get('is_seller', False)

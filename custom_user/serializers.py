@@ -39,7 +39,7 @@ class VisitorSerializer(serializers.ModelSerializer):
         :return: Создается новый экземпляр класса CustomUser.
         """
 
-        password_confirmation = validated_data.pop('password_confirmation', None)
+        validated_data.pop('password_confirmation', None)
         new_common_user = CustomUser.objects.create_user(**validated_data)
         return new_common_user
 
@@ -63,6 +63,6 @@ class SellerSerializer(serializers.ModelSerializer):
         validators = [PasswordValidation()]
 
     def create(self, validated_data):
-        password_confirmation = validated_data.pop('password_confirmation', None)
+        validated_data.pop('password_confirmation', None)
         new_seller = CustomUser.objects.create_user(**validated_data)
         return new_seller
