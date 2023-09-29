@@ -41,9 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'rest_framework',
     'django_extensions',
+    'django_filters',
+    'drf_yasg',
+    'corsheaders',
 
     'custom_user.apps.CustomUserConfig',
+    'products.apps.ProductsConfig',
 ]
 
 
@@ -56,6 +61,10 @@ INSTALLED_APPS = [
 # Setting the permission policy
 # https://www.django-rest-framework.org/api-guide/permissions/#setting-the-permission-policy
 
+# Integration with Django Rest Framework is provided through a DRF-specific FilterSet and a filter backend.
+# These may be found in the rest_framework sub-package.
+# https://django-filter.readthedocs.io/en/stable/guide/rest_framework.html
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -63,9 +72,13 @@ REST_FRAMEWORK = {
     ),
 
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.AllowAny',
-    ]
+        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.AllowAny',
+    ],
+
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
 }
 
 # Some of Simple JWT’s behavior can be customized through settings variables in settings.py
@@ -80,6 +93,7 @@ SIMPLE_JWT = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -137,6 +151,19 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+
+# CORS integration
+# https://pypi.org/project/django-cors-headers/#description (CSRF Integration)
+
+CORS_ALLOWED_ORIGINS = [
+    "https://read-only.example.com",
+    "https://read-and-write.example.com",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://read-and-write.example.com",
 ]
 
 
